@@ -36,66 +36,50 @@ constexpr size_t LOCAL_SIZE = 256;
 
 #define STRINGIFY(...) #__VA_ARGS__
 
-// This example have built-in kernel to easy modify, etc
+
 // ---------------------------------- OpenCL ---------------------------------
 const char* vakernel = STRINGIFY(
 __kernel void img(__global uchar4 * image, int w, int h)
 {
+    float strength = 0.08f;
+    float speed = 0.08f;
     int i = get_global_id(0);
-
-    image[i].x *= 2;
-    image[i].y /= 2;
-    
+    int x = i % w;
+    int y = i / w;
 
 
-
-    //float strength = 0.08f;
-    //float speed = 0.08f;
-    //int i = get_global_id(0);
-    //int x = i % w;
-    //int y = i / w;
-
-    //// ÷ентр изображени€
-    //float cx = w / 2.0f;
-    //float cy = h / 2.0f;
-
-    //// ѕолучаем угол дл€ каждого пиксел€ относительно центра
-    //float dx = (float)(x - cx);
-    //float dy = (float)(y - cy);
-    //float distance = sqrt(dx * dx + dy * dy);
-
-    //// ¬ычисл€ем угол дл€ текущего пиксел€
-    //float angle = atan2(dy, dx);
-
-    //// »змен€ем угол на основе рассто€ни€ и времени
-    //angle += strength * sin(distance * speed);
-
-    //// ѕересчитываем новые координаты после вращени€
-    //float newX = cx + cos(angle) * distance;
-    //float newY = cy + sin(angle) * distance;
-
-    //// ѕытаемс€ отобразить пиксель в новых координатах
-    //int nx = (int)newX;
-    //int ny = (int)newY;
-
-    //// ≈сли новые координаты выход€т за пределы, оставл€ем их в пределах изображени€
-    //if (nx < 0) nx = 0;
-    //if (ny < 0) ny = 0;
-    //if (nx >= w) nx = w - 1;
-    //if (ny >= h) ny = h - 1;
-
-    //// ѕолучаем исходный пиксель
-    //uchar4 pixel = image[ny * w + nx];
-
-    //// «аписываем пиксель в новое место
-    //image[y * w + x] = pixel;
+    float cx = w / 2.0f;
+    float cy = h / 2.0f;
 
 
+    float dx = (float)(x - cx);
+    float dy = (float)(y - cy);
+    float distance = sqrt(dx * dx + dy * dy);
 
 
+    float angle = atan2(dy, dx);
+
+    angle += strength * sin(distance * speed);
+
+    float newx = cx + cos(angle) * distance;
+    float newy = cy + sin(angle) * distance;
+
+
+    int nx = (int)newx;
+    int ny = (int)newy;
+
+
+    if (nx < 0) nx = 0;
+    if (ny < 0) ny = 0;
+    if (nx >= w) nx = w - 1;
+    if (ny >= h) ny = h - 1;
+
+
+    uchar4 pixel = image[ny * w + nx];
+
+
+    image[y * w + x] = pixel;
 }
-
-
 );
 // ---------------------------------- OpenCL ---------------------------------
 
@@ -237,8 +221,6 @@ void OclApp::test_img(RGBA* img, int w, int h)
     evt.wait();
 
 
-
-
     cl::copy(Q_, A, img, img + NumPixels);
 }
 
@@ -247,10 +229,8 @@ int main() try {
     int h;
 
 
-
     OclApp app;
     cl::vector<RGBA> src = LoadImage("../res/giraf.png", w, h);
-
 
 
     for (int i = 0; i < 1; i++) 
@@ -262,34 +242,8 @@ int main() try {
         std::chrono::duration<double> duration = end - start;
         std::cout << duration.count() << std::endl;
     }
-
-#if 0
-    for (int i = 0; i < src.size(); i++) {
-        char gray = (char)(0.299f * src[i].r + 0.587f * src[i].g + 0.114f * src[i].b);
-
-        src[i].r = gray;
-        src[i].g = gray;
-        src[i].b = gray;
-    }
-#endif
-    
-
+	
     SaveImage("../out.png", src, w, h);
-
-
-
-    
-
-
-
-    //app.vadd(src.data(), ARR_SIZE, dst.data());
-
-
-    //std::cout << dst[0] << std::endl;
-
-    
-
-
 }
 catch (cl::Error& err) {
     std::cerr << "OCL ERROR " << err.err() << ":" << err.what() << std::endl;
