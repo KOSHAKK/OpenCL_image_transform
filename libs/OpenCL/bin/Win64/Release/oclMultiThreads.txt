@@ -1,0 +1,15 @@
+Detected 1 OpenCL devices of type CL_DEVICE_TYPE_GPU
+> OpenCL Device #0 (NVIDIA GeForce RTX 3050 Laptop GPU), cl_device_id: 20027936
+clCreateProgramWithSource <kernel.cl> succeeded, program_length=87
+clBuildProgram <kernel.cl> succeeded
+clGetProgramBuildInfo returned: CL_SUCCESS
+
+
+NVIDIA GeForce RTX 3050 Laptop GPU: simpleIncrement(), cl_device_id: 20027936, event_id: 0
+NVIDIA GeForce RTX 3050 Laptop GPU: simpleIncrement(), cl_device_id: 20027936, event_id: 1
+NVIDIA GeForce RTX 3050 Laptop GPU: simpleIncrement(), cl_device_id: 20027936, event_id: 2
+NVIDIA GeForce RTX 3050 Laptop GPU: simpleIncrement(), cl_device_id: 20027936, event_id: 3
+NVIDIA GeForce RTX 3050 Laptop GPU: simpleIncrement(), cl_device_id: 20027936, event_id: 4
+NVIDIA GeForce RTX 3050 Laptop GPU: simpleIncrement(), cl_device_id: 20027936, event_id: 5
+NVIDIA GeForce RTX 3050 Laptop GPU: simpleIncrement(), cl_device_id: 20027936, event_id: 6
+NVIDIA GeForce RTX 3050 Laptop GPU: simpleIncrement(), cl_device_id: 20027936, event_id: 7
